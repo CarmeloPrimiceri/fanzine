@@ -50,7 +50,7 @@ class CastleGame {
                 },
                 {
                     img: 'faccia_statua_destra.png',
-                    text: "Potrai chiedere solo ad una di noi statue qual'è la porta giusta."
+                    text: "Potrai chiedere solo ad una di noi statue qual è la porta giusta."
                 },
                 {
                     img: 'faccia_statua_sinistra.png',
@@ -235,7 +235,7 @@ class CastleGame {
 
         this.elements.speakerImg.src = `../assets/images/characters/${imgName}`;
 
-        const question = "Statua rispondi solo sì o no. Lui mi direbbe che la tua porta è quella giusta?";
+        const question = "Statua rispondi solo sì o no. L'altra statua mi direbbe che la tua porta è quella giusta?";
 
         this.typeWriter.type(question, () => {
             // Imposta il click listener per la risposta
