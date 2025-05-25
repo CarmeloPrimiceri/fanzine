@@ -140,11 +140,26 @@ class TypeWriter {
 // Utilities per la navigazione
 const Navigation = {
     goToPage(pageName) {
-        window.location.href = `${GameConfig.PATHS.PAGES}${pageName}.html`;
+        // Rileva se siamo già in pages/
+        const currentPath = window.location.pathname;
+
+        if (currentPath.includes('/pages/')) {
+            // Siamo in pages/, naviga direttamente
+            window.location.href = `${pageName}.html`;
+        } else {
+            // Siamo in root, vai a pages/
+            window.location.href = `pages/${pageName}.html`;
+        }
     },
 
     goHome() {
-        window.location.href = '../index.html';
+        const currentPath = window.location.pathname;
+
+        if (currentPath.includes('/pages/')) {
+            window.location.href = '../index.html';
+        } else {
+            window.location.href = 'index.html';
+        }
     },
 
     reload() {

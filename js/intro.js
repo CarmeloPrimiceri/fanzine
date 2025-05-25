@@ -209,7 +209,7 @@ class IntroSequence {
         Effects.fadeIn(overlay, 500);
 
         setTimeout(() => {
-            Navigation.goToPage('game');
+            window.location.href = 'game.html';
         }, 500);
     }
 

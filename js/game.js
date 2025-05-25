@@ -347,7 +347,7 @@ class CastleGame {
         const victoryDiv = document.createElement('div');
         victoryDiv.className = 'victory-options';
         victoryDiv.innerHTML = `
-            <button class="btn" onclick="Navigation.goToPage('victory')">
+            <button class="btn" onclick="window.location.href='victory.html'">
                 🏆 Vai al Tesoro
             </button>
             <button class="btn" onclick="restartGame()">
