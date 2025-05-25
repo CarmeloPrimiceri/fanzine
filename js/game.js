@@ -13,6 +13,7 @@ class CastleGame {
         this.initializeElements();
         this.setupAudio();
         this.startGame();
+        this.setupGameplayHandlers();
     }
 
     initializeElements() {
@@ -103,16 +104,82 @@ class CastleGame {
         this.elements.dialogueBox.addEventListener('click', () => {
             this.handleDialogueClick();
         });
+    }
 
-        // Pulsanti principali
-        this.elements.askBtn.addEventListener('click', () => this.showQuestionOptions());
-        this.elements.chooseBtn.addEventListener('click', () => this.chooseMode());
+    setupGameplayHandlers() {
+        // Fix CSS per containers
+        this.elements.options.style.pointerEvents = 'auto';
+        this.elements.questionOptions.style.pointerEvents = 'auto';
 
-        // Pulsanti domande
-        this.elements.qDoor.addEventListener('click', () => this.askAboutDoor());
-        this.elements.qStatue.addEventListener('click', () => this.askAboutStatue());
+        // Fix CSS per question-options visibility
+        this.elements.questionOptions.style.cssText = `
+            position: fixed !important;
+            bottom: 5% !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 90% !important;
+            max-width: 800px !important;
+            display: none !important;
+            justify-content: space-between !important;
+            align-items: flex-end !important;
+            z-index: 120 !important;
+            pointer-events: auto !important;
+        `;
 
-        // Aree cliccabili
+        // Rimuovi tutti gli event listener esistenti e riapplica
+        this.cleanAndSetupButtons();
+        this.setupClickAreas();
+    }
+
+    cleanAndSetupButtons() {
+        // Clona i pulsanti per rimuovere tutti gli event listener
+        const oldAskBtn = this.elements.askBtn;
+        const oldChooseBtn = this.elements.chooseBtn;
+
+        const newAskBtn = oldAskBtn.cloneNode(true);
+        const newChooseBtn = oldChooseBtn.cloneNode(true);
+
+        oldAskBtn.parentNode.replaceChild(newAskBtn, oldAskBtn);
+        oldChooseBtn.parentNode.replaceChild(newChooseBtn, oldChooseBtn);
+
+        // Aggiorna i riferimenti
+        this.elements.askBtn = newAskBtn;
+        this.elements.chooseBtn = newChooseBtn;
+
+        // Aggiungi nuovi event listener
+        this.elements.askBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.showQuestionOptions();
+        });
+
+        this.elements.chooseBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.chooseMode();
+        });
+
+        // Setup pulsanti domande
+        this.elements.qDoor.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.askAboutDoor();
+        });
+
+        this.elements.qStatue.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.askAboutStatue();
+        });
+
+        // Forza pointer events
+        [this.elements.askBtn, this.elements.chooseBtn, this.elements.qDoor, this.elements.qStatue].forEach(btn => {
+            btn.style.pointerEvents = 'auto';
+        });
+    }
+
+    setupClickAreas() {
+        // Setup aree cliccabili
         this.elements.leftArea.addEventListener('click', () => this.handleAreaClick('left'));
         this.elements.rightArea.addEventListener('click', () => this.handleAreaClick('right'));
     }
@@ -160,43 +227,47 @@ class CastleGame {
 
     endIntroSequence() {
         this.elements.dialogueBox.style.visibility = 'hidden';
-        this.elements.options.style.display = 'block';
+        this.elements.options.style.display = 'flex';
         this.currentState = 'gameplay';
     }
 
     showQuestionOptions() {
+        console.log('🗨️ Mostrando opzioni domande');
         this.elements.options.style.display = 'none';
-        this.elements.questionOptions.style.display = 'block';
+        this.elements.questionOptions.style.display = 'flex';
     }
 
     askAboutDoor() {
+        console.log('❓ Domanda sulla porta');
         this.elements.questionOptions.style.display = 'none';
         this.elements.speakerImg.src = '';
         this.elements.dialogueBox.style.visibility = 'visible';
 
-        this.typeWriter.type('Seleziona statua', () => {
+        this.typeWriter.type('Clicca SINISTRA o DESTRA per scegliere la statua', () => {
             this.showClickAreas();
             this.currentState = 'selecting-statue-door';
         });
     }
 
     askAboutStatue() {
+        console.log('🗿 Domanda sulla natura della statua');
         this.elements.questionOptions.style.display = 'none';
         this.elements.speakerImg.src = '';
         this.elements.dialogueBox.style.visibility = 'visible';
 
-        this.typeWriter.type('Seleziona statua', () => {
+        this.typeWriter.type('Clicca SINISTRA o DESTRA per scegliere la statua', () => {
             this.showClickAreas();
             this.currentState = 'selecting-statue-nature';
         });
     }
 
     chooseMode() {
+        console.log('🚪 Modalità scelta porte');
         this.elements.options.style.display = 'none';
         this.elements.speakerImg.src = '';
         this.elements.dialogueBox.style.visibility = 'visible';
 
-        this.typeWriter.type('Seleziona porta', () => {
+        this.typeWriter.type('Clicca SINISTRA o DESTRA per scegliere la porta', () => {
             this.showClickAreas();
             this.currentState = 'choosing-door';
         });
@@ -205,6 +276,10 @@ class CastleGame {
     showClickAreas() {
         this.elements.leftArea.style.display = 'block';
         this.elements.rightArea.style.display = 'block';
+
+        // Aggiungi indicatori visivi
+        this.elements.leftArea.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+        this.elements.rightArea.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
     }
 
     hideClickAreas() {
@@ -213,6 +288,7 @@ class CastleGame {
     }
 
     handleAreaClick(side) {
+        console.log(`Cliccato ${side}`);
         this.hideClickAreas();
 
         switch (this.currentState) {
@@ -235,7 +311,7 @@ class CastleGame {
 
         this.elements.speakerImg.src = `../assets/images/characters/${imgName}`;
 
-        const question = "Statua rispondi solo sì o no. L'altra statua mi direbbe che la tua porta è quella giusta?";
+        const question = "L'altra statua mi direbbe che la tua porta è quella giusta?";
 
         this.typeWriter.type(question, () => {
             // Imposta il click listener per la risposta
@@ -243,7 +319,9 @@ class CastleGame {
                 const answer = this.gameData.statueResponses[side].doorQuestion;
                 this.typeWriter.type(answer, () => {
                     this.elements.dialogueBox.onclick = null;
-                    this.resetToMainOptions();
+                    setTimeout(() => {
+                        this.resetToMainOptions();
+                    }, 1500);
                 });
             };
         });
@@ -259,7 +337,9 @@ class CastleGame {
         this.typeWriter.type('...', () => {
             this.elements.dialogueBox.onclick = () => {
                 this.elements.dialogueBox.onclick = null;
-                this.resetToMainOptions();
+                setTimeout(() => {
+                    this.resetToMainOptions();
+                }, 1000);
             };
         });
     }
@@ -267,11 +347,13 @@ class CastleGame {
     resetToMainOptions() {
         this.elements.dialogueBox.style.visibility = 'hidden';
         this.elements.questionOptions.style.display = 'none';
-        this.elements.options.style.display = 'block';
+        this.elements.options.style.display = 'flex';
+        this.elements.speakerImg.src = '';
         this.currentState = 'gameplay';
     }
 
     openDoor(side) {
+        console.log(`🚪 Aprendo porta ${side}`);
         // Avvia la sequenza di apertura porta
         this.currentState = 'door-opening';
 
@@ -411,8 +493,7 @@ function goHome() {
     window.location.href = '../index.html';
 }
 
-// Inizializza il gioco quando la pagina è caricata
-// ✅ NUOVO (funziona sempre)
+// Inizializzazione robusta del gioco
 function initializeCastleGame() {
     if (!window.castleGame) {
         window.castleGame = new CastleGame();
@@ -420,7 +501,7 @@ function initializeCastleGame() {
     }
 }
 
-// Prova inizializzazione immediata
+// Prova inizializzazione immediata o su DOMContentLoaded
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeCastleGame);
 } else {
