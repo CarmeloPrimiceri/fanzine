@@ -412,6 +412,18 @@ function goHome() {
 }
 
 // Inizializza il gioco quando la pagina è caricata
-document.addEventListener('DOMContentLoaded', () => {
-    new CastleGame();
-});
+// ✅ NUOVO (funziona sempre)
+function initializeCastleGame() {
+    if (!window.castleGame) {
+        window.castleGame = new CastleGame();
+        console.log('🎮 CastleGame inizializzato!');
+    }
+}
+
+// Prova inizializzazione immediata
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeCastleGame);
+} else {
+    // DOM già caricato, inizializza subito
+    initializeCastleGame();
+}
