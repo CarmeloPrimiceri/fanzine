@@ -1,0 +1,271 @@
+/* ===== RESET E VARIABILI GLOBALI ===== */
+@font-face {
+    font-family: 'Alagard';
+    src: url('../assets/fonts/Alagard.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --primary-bg: #000;
+    --text-dark: #080808;
+    --text-light: #fff;
+    --parchment-bg: url('../assets/images/ui/pergamena.png');
+    --parchment-bg-alt: url('../assets/images/ui/pergamena_.png');
+    --pixel-texture: url('../assets/images/ui/pixel_texture.png');
+    --transition-fast: 0.3s ease;
+    --transition-medium: 0.5s ease;
+    --transition-slow: 1.5s ease-in-out;
+    --border-radius: 8px;
+    --shadow-dark: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--primary-bg);
+    font-family: 'Alagard', serif;
+    user-select: none;
+}
+
+/* ===== COMPONENTI RIUTILIZZABILI ===== */
+
+/* Pulsanti medievali */
+.btn {
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    cursor: pointer;
+    background: var(--pixel-texture) center/cover no-repeat;
+    image-rendering: pixelated;
+    border: 2px solid #000;
+    color: #000;
+    text-shadow: 1px 1px #fff;
+    transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+    border-radius: 4px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-dark);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Pergamena per dialoghi */
+.dialogue-wrapper {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75%;
+    max-width: 550px;
+    max-height: 40vh;
+    z-index: 10;
+}
+
+.dialogue-box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 2rem 1.5rem;
+    background: var(--parchment-bg) no-repeat center center;
+    background-size: contain;
+    overflow: hidden;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    transition: visibility var(--transition-medium);
+}
+
+.dialogue-text {
+    position: absolute;
+    top: 20%;
+    bottom: 20%;
+    left: 10%;
+    right: 10%;
+    overflow-y: auto;
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+/* Immagini dei personaggi */
+.speaker-img {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-150%);
+    width: 160px;
+    height: 160px;
+    z-index: 11;
+}
+
+/* Overlay per transizioni */
+.fade-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-bg);
+    opacity: 0;
+    transition: opacity var(--transition-medium);
+    pointer-events: none;
+    z-index: 20;
+}
+
+/* Loading screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: var(--text-light);
+}
+
+.spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    margin-top: 20px;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* Istruzioni */
+.instructions {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--text-light);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    text-align: center;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity var(--transition-medium);
+}
+
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: var(--text-light);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: var(--shadow-dark);
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .dialogue-wrapper {
+        width: 90%;
+    }
+
+    .speaker-img {
+        width: 100px;
+        height: 100px;
+        transform: translateX(-140%);
+    }
+
+    .dialogue-box {
+        padding: 1.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .dialogue-text {
+        top: 18%;
+        bottom: 18%;
+        left: 12%;
+        right: 12%;
+    }
+
+    .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .instructions {
+        padding: 10px;
+        font-size: 14px;
+    }
+}

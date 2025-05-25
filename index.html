@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Castello Maledetto - Menu Principale</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="icon" href="assets/images/icons/favicon.ico" type="image/x-icon">
+</head>
+<body>
+<div id="main-menu">
+    <div class="menu-background">
+        <img src="assets/images/backgrounds/Arrivo_Del_Cavaliere.png" alt="Castello" id="menu-bg">
+    </div>
+
+    <div class="menu-overlay">
+        <div class="title-container">
+            <h1 class="game-title">Il Castello Maledetto</h1>
+            <p class="game-subtitle">Un'avventura medievale interattiva</p>
+        </div>
+
+        <nav class="main-navigation">
+            <button class="menu-btn" onclick="startGame()">
+                🎮 Inizia Avventura
+            </button>
+            <button class="menu-btn" onclick="startAR()">
+                📱 Esperienza AR
+            </button>
+            <button class="menu-btn" onclick="showCredits()">
+                ℹ️ Crediti
+            </button>
+        </nav>
+    </div>
+</div>
+
+<!-- Modal Crediti -->
+<div id="credits-modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn" onclick="hideCredits()">&times;</span>
+        <h2>Crediti</h2>
+        <div class="credits-info">
+            <p><strong>Sviluppato da:</strong> [Il tuo nome]</p>
+            <p><strong>Tecnologie:</strong> HTML5, CSS3, JavaScript, A-Frame</p>
+            <p><strong>Font:</strong> Alagard, Cinzel</p>
+            <p><strong>Grafica:</strong> Elementi medievali custom</p>
+            <p><strong>Audio:</strong> Effetti sonori ambientali</p>
+        </div>
+    </div>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/menu.js"></script>
+</body>
+</html>

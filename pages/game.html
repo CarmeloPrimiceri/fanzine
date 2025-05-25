@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Castello Maledetto - Enigma delle Statue</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/game.css">
+</head>
+<body>
+<div id="scene">
+    <div id="background"></div>
+    <div class="fade-overlay" id="fade-overlay"></div>
+
+    <!-- Dialogue System -->
+    <div class="dialogue-wrapper" id="dialogue-wrapper">
+        <img id="speaker-img"
+             class="speaker-img"
+             src=""
+             alt="Speaker">
+        <div class="dialogue-box" id="dialogue-box">
+            <div class="dialogue-text" id="dialogue-text"></div>
+        </div>
+    </div>
+
+    <!-- Game Controls -->
+    <div id="options" class="game-options">
+        <button class="btn" id="ask-btn">🗨️ Chiedi</button>
+        <button class="btn" id="choose-btn">🚪 Scegli</button>
+    </div>
+
+    <div id="question-options" class="question-options">
+        <button class="btn" id="q-door">Quale porta?</button>
+        <button class="btn" id="q-statue">Sei davvero una statua?</button>
+    </div>
+
+    <!-- Click Areas for Interaction -->
+    <div class="click-area left" id="left-area" title="Statua/Porta Sinistra"></div>
+    <div class="click-area right" id="right-area" title="Statua/Porta Destra"></div>
+
+    <!-- Game Navigation -->
+    <div id="game-nav" class="game-navigation">
+        <button class="btn nav-btn" onclick="goHome()">🏠 Menu</button>
+        <button class="btn nav-btn" onclick="restartGame()">🔄 Riavvia</button>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="footsteps" src="../assets/audio/effects/passi.wav"></audio>
+    <audio id="torch" src="../assets/audio/effects/fire.wav" loop></audio>
+    <audio id="wind" src="../assets/audio/effects/vento.wav"></audio>
+    <audio id="bgmusic" src="../assets/audio/music/sottofondo.mp3" loop></audio>
+</div>
+
+<script src="../js/main.js"></script>
+<script src="../js/game.js"></script>
+</body>
+</html>

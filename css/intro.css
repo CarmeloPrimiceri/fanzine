@@ -1,0 +1,185 @@
+/* ===== INTRO.CSS - Stili per la pagina introduttiva ===== */
+
+#scene {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#scene-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(20px);
+    transform: scale(1.2);
+    transition: filter 2s ease-out, transform 3s ease-out;
+    z-index: 0;
+}
+
+#scene-image.focused {
+    filter: blur(0);
+    transform: scale(1);
+}
+
+.dialogue-wrapper {
+    position: absolute;
+    bottom: 5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 700px;
+    aspect-ratio: 16 / 5;
+    background: var(--parchment-bg-alt) no-repeat center center;
+    background-size: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4vh 4vw;
+    opacity: 0;
+    transition: opacity var(--transition-slow);
+    z-index: 2;
+}
+
+.dialogue-box {
+    color: var(--text-dark);
+    font-size: clamp(16px, 2vw, 20px);
+    line-height: 1.5;
+    text-align: center;
+    max-width: 90%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#devil {
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    width: clamp(170px, 13vw, 200px);
+    height: auto;
+    transform: scale(0.25);
+    transform-origin: top left;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+    z-index: 3;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.7));
+}
+
+#title-video {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70vw;
+    max-width: 500px;
+    z-index: 4;
+    display: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-dark);
+}
+
+.continue-button {
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    z-index: 5;
+    box-shadow: var(--shadow-dark);
+}
+
+.continue-button:hover {
+    background: linear-gradient(135deg, #357abd, #2968a3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
+}
+
+.continue-button.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Animazioni speciali per l'intro */
+@keyframes devilAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.1) rotate(-10deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(0.25) rotate(0deg);
+    }
+}
+
+.devil-animated {
+    animation: devilAppear 1s ease-out forwards;
+}
+
+/* Effetti per il video titolo */
+#title-video.playing {
+    animation: videoGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes videoGlow {
+    from {
+        box-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+    }
+    to {
+        box-shadow: 0 0 40px rgba(74, 144, 226, 0.8);
+    }
+}
+
+/* Responsive per l'introduzione */
+@media (max-width: 768px) {
+    .dialogue-wrapper {
+        width: 95%;
+        padding: 3vh 3vw;
+        aspect-ratio: 16 / 6;
+    }
+
+    .dialogue-box {
+        font-size: clamp(14px, 3vw, 18px);
+    }
+
+    #devil {
+        width: clamp(120px, 15vw, 150px);
+        left: 5%;
+    }
+
+    #title-video {
+        width: 85vw;
+        top: 10%;
+    }
+
+    .continue-button {
+        bottom: 5%;
+        right: 50%;
+        transform: translateX(50%);
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dialogue-wrapper {
+        bottom: 3vh;
+        aspect-ratio: 16 / 7;
+    }
+
+    #devil {
+        transform: scale(0.2);
+    }
+
+    #title-video {
+        width: 90vw;
+    }
+}

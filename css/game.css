@@ -1,0 +1,320 @@
+/* ===== GAME.CSS - Stili per il gioco principale ===== */
+
+#scene {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%) scale(1.2);
+    background: url('../assets/images/backgrounds/statue_accese.png') center center no-repeat;
+    background-size: contain;
+    filter: brightness(0.2);
+    animation: introZoom 2s forwards;
+    transition: background-image var(--transition-medium),
+    opacity var(--transition-medium);
+    z-index: 0;
+}
+
+@keyframes introZoom {
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        filter: brightness(1);
+    }
+}
+
+/* Overlay per transizioni */
+.fade-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-bg);
+    opacity: 0;
+    transition: opacity var(--transition-medium);
+    pointer-events: none;
+    z-index: 20;
+}
+
+/* Sistema di dialoghi del gioco */
+.dialogue-wrapper {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75%;
+    max-width: 550px;
+    max-height: 40vh;
+    z-index: 10;
+}
+
+.dialogue-box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 2rem 1.5rem;
+    background: var(--parchment-bg) no-repeat center center;
+    background-size: contain;
+    overflow: hidden;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    transition: visibility var(--transition-medium);
+}
+
+.dialogue-text {
+    position: absolute;
+    top: 20%;
+    bottom: 20%;
+    left: 10%;
+    right: 10%;
+    overflow-y: auto;
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.speaker-img {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-150%);
+    width: 160px;
+    height: 160px;
+    z-index: 11;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: transform var(--transition-fast);
+}
+
+.speaker-img:hover {
+    transform: translateX(-150%) scale(1.05);
+}
+
+/* Controlli del gioco */
+.game-options,
+.question-options {
+    position: absolute;
+    bottom: 2%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    z-index: 10;
+    gap: 10px;
+}
+
+.game-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.question-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Aree cliccabili */
+.click-area {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    display: none;
+    cursor: pointer;
+    z-index: 5;
+    transition: background-color var(--transition-fast);
+}
+
+.click-area:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.click-area.left {
+    left: 0;
+    border-right: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+.click-area.right {
+    left: 50%;
+    border-left: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+/* Indicatori visivi per le aree */
+.click-area::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    opacity: 0;
+    animation: pulseIndicator 2s infinite;
+}
+
+@keyframes pulseIndicator {
+    0%, 100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+/* Navigazione del gioco */
+.game-navigation {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 15;
+}
+
+.nav-btn {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(10px);
+}
+
+.nav-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Effetti per vittoria e sconfitta */
+.victory-options,
+.gameover-options {
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateX(-50%) translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+.gameover-options {
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 0, 0, 0.5);
+}
+
+.gameover-options h2 {
+    color: #ff4444;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    animation: shake 0.5s ease-in-out 3;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Overlay per il video di morte */
+#death-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    object-fit: contain;
+    animation: playDeath 2s forwards;
+    z-index: 30;
+}
+
+@keyframes playDeath {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive per il gioco */
+@media (max-width: 768px) {
+    .dialogue-wrapper {
+        width: 90%;
+    }
+
+    .speaker-img {
+        width: 100px;
+        height: 100px;
+        transform: translateX(-140%);
+    }
+
+    .dialogue-box {
+        padding: 1.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .dialogue-text {
+        top: 18%;
+        bottom: 18%;
+        left: 12%;
+        right: 12%;
+    }
+
+    .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .game-navigation {
+        top: 10px;
+        right: 10px;
+        flex-direction: column;
+    }
+
+    .nav-btn {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dialogue-wrapper {
+        bottom: 3%;
+    }
+
+    .click-area::before {
+        width: 40px;
+        height: 40px;
+    }
+
+    .game-options {
+        bottom: 1%;
+    }
+
+    .question-options {
+        bottom: 1%;
+    }
+}

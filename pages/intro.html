@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Castello Maledetto - Introduzione</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/intro.css">
+</head>
+<body>
+<div id="scene">
+    <img id="scene-image"
+         src="../assets/images/backgrounds/Arrivo_Del_Cavaliere.png"
+         alt="Cavaliere che arriva al castello">
+
+    <div class="dialogue-wrapper" id="dialogueWrapper">
+        <img id="devil"
+             src="../assets/images/characters/testa_diavolo.png"
+             alt="Diavolo">
+        <div id="dialogue" class="dialogue-box"></div>
+    </div>
+
+    <video id="title-video"
+           src="../assets/video/castello_maledetto.mp4"
+           type="video/mp4"
+           autoplay
+           muted
+           playsinline
+           preload="auto">
+    </video>
+
+    <!-- Navigation Button -->
+    <button id="continue-btn" class="btn continue-button hidden">
+        Continua l'Avventura →
+    </button>
+
+    <!-- Audio Elements -->
+    <audio id="torch-audio"
+           src="../assets/audio/effects/fire.wav"
+           autoplay
+           loop>
+    </audio>
+    <audio id="music"
+           src="../assets/audio/music/Viking_Feast.mp3">
+    </audio>
+</div>
+
+<script src="../js/main.js"></script>
+<script src="../js/intro.js"></script>
+</body>
+</html>
