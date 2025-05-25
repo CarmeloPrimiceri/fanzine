@@ -1,4 +1,4 @@
-/* ===== INTRO.CSS - Stili per la pagina introduttiva (FIX DEFINITIVO) ===== */
+/* ===== INTRO.CSS - Stili per la pagina introduttiva ===== */
 
 #scene {
     position: relative;
@@ -44,69 +44,29 @@
     z-index: 2;
 }
 
-/* FIX DEFINITIVO: Dialogo sempre visibile */
+/* DIALOGO CON POSIZIONAMENTO SEMPLICE */
 .dialogue-box {
-    /* POSIZIONAMENTO FORZATO */
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-
-    /* DIMENSIONI */
-    width: 400px !important;
-    max-width: 90vw !important;
-    height: auto !important;
-    min-height: 150px !important;
-
-    /* STILE VISIBILE */
-    background: rgba(240, 230, 210, 0.95) !important;
+    position: relative !important;
+    margin: 50px !important;
+    background: transparent !important;
     color: #2c1810 !important;
     font-family: 'Georgia', 'Times New Roman', serif !important;
-    font-size: 20px !important;
+    font-size: clamp(16px, 2vw, 20px) !important;
     font-weight: bold !important;
-    line-height: 1.4 !important;
-
-    /* LAYOUT */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
     text-align: center !important;
-    padding: 30px !important;
-
-    /* VISIBILITÀ FORZATA */
+    line-height: 1.4 !important;
     visibility: visible !important;
     opacity: 1 !important;
-    z-index: 9999 !important;
-
-    /* STILE */
-    border-radius: 15px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
-    border: 3px solid #8b4513 !important;
-
-    /* TESTO */
+    z-index: 10 !important;
     white-space: pre-wrap !important;
     word-wrap: break-word !important;
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8) !important;
-
-    /* DEBUG OVERRIDE */
-    overflow: visible !important;
-}
-
-/* Stile alternativo per dispositivi mobili */
-@media (max-width: 768px) {
-    .dialogue-box {
-        width: 350px !important;
-        font-size: 18px !important;
-        padding: 25px !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .dialogue-box {
-        width: 300px !important;
-        font-size: 16px !important;
-        padding: 20px !important;
-    }
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
 }
 
 #devil {
@@ -115,7 +75,7 @@
     left: 10%;
     width: clamp(170px, 13vw, 200px);
     height: auto;
-    transform: scale(0.25);
+    transform: scale(0.5);
     transform-origin: top left;
     opacity: 0;
     transition: opacity 2s ease-in-out;
@@ -165,7 +125,7 @@
     pointer-events: none;
 }
 
-/* Animazioni */
+/* Animazioni speciali per l'intro */
 @keyframes devilAppear {
     from {
         opacity: 0;
@@ -181,6 +141,7 @@
     animation: devilAppear 1s ease-out forwards;
 }
 
+/* Effetti per il video titolo */
 #title-video.playing {
     animation: videoGlow 2s ease-in-out infinite alternate;
 }
@@ -194,21 +155,54 @@
     }
 }
 
-/* IMPORTANTE: Override per variabili CSS che potrebbero interferire */
-:root {
-    --transition-slow: 1.5s ease-in-out;
-    --parchment-bg-alt: url('../assets/images/ui/pergamena_.png');
+/* Responsive per l'introduzione */
+@media (max-width: 768px) {
+    .dialogue-wrapper {
+        width: 95%;
+        padding: 3vh 3vw;
+        aspect-ratio: 16 / 6;
+    }
+
+    .dialogue-box {
+        font-size: clamp(14px, 3vw, 18px) !important;
+        margin: 30px !important;
+    }
+
+    #devil {
+        width: clamp(120px, 15vw, 150px);
+        left: 5%;
+    }
+
+    #title-video {
+        width: 85vw;
+        top: 10%;
+    }
+
+    .continue-button {
+        bottom: 5%;
+        right: 50%;
+        transform: translateX(50%);
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
 }
 
-/* CSS Reset per il dialogo - elimina interferenze */
-.dialogue-box * {
-    all: unset;
-    display: inline;
-    white-space: pre-wrap;
-}
+@media (max-width: 480px) {
+    .dialogue-wrapper {
+        bottom: 3vh;
+        aspect-ratio: 16 / 7;
+    }
 
-/* Assicura che il wrapper non interferisca */
-.dialogue-wrapper[style*="opacity: 1"] .dialogue-box {
-    position: fixed !important;
-    /* Mantiene il posizionamento fisso anche quando il wrapper è visibile */
+    .dialogue-box {
+        font-size: clamp(12px, 4vw, 16px) !important;
+        margin: 20px !important;
+    }
+
+    #devil {
+        transform: scale(0.2);
+    }
+
+    #title-video {
+        width: 90vw;
+    }
 }
