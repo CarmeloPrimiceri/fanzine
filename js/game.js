@@ -1,6 +1,7 @@
 /**
  * ===== IL CASTELLO MALEDETTO - GAME.JS =====
  * Logica del gioco principale - Enigma delle Statue
+ * VERSIONE CORRETTA CON FIX PER I PULSANTI
  */
 
 class CastleGame {
@@ -14,6 +15,11 @@ class CastleGame {
         this.setupAudio();
         this.startGame();
         this.setupGameplayHandlers();
+
+        // DEBUG: Aggiungi listener globale per testare i click
+        document.addEventListener('click', (e) => {
+            console.log('🔍 Click globale su:', e.target.id, e.target.className, e.target);
+        });
     }
 
     initializeElements() {
@@ -107,11 +113,23 @@ class CastleGame {
     }
 
     setupGameplayHandlers() {
-        // Fix CSS per containers
-        this.elements.options.style.pointerEvents = 'auto';
-        this.elements.questionOptions.style.pointerEvents = 'auto';
+        console.log('🔧 Setting up gameplay handlers...');
 
-        // Fix CSS per question-options visibility
+        // Fix CSS per containers - RIMUOVI pointer-events: none
+        this.elements.options.style.cssText = `
+            position: fixed !important;
+            bottom: 5% !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 90% !important;
+            max-width: 800px !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: flex-end !important;
+            z-index: 120 !important;
+            pointer-events: auto !important;
+        `;
+
         this.elements.questionOptions.style.cssText = `
             position: fixed !important;
             bottom: 5% !important;
@@ -129,31 +147,46 @@ class CastleGame {
         // Rimuovi tutti gli event listener esistenti e riapplica
         this.cleanAndSetupButtons();
         this.setupClickAreas();
+
+        console.log('✅ Gameplay handlers setup complete');
     }
 
     cleanAndSetupButtons() {
+        console.log('🔧 Cleaning and setting up buttons...');
+
         // Clona i pulsanti per rimuovere tutti gli event listener
         const oldAskBtn = this.elements.askBtn;
         const oldChooseBtn = this.elements.chooseBtn;
+        const oldQDoor = this.elements.qDoor;
+        const oldQStatue = this.elements.qStatue;
 
         const newAskBtn = oldAskBtn.cloneNode(true);
         const newChooseBtn = oldChooseBtn.cloneNode(true);
+        const newQDoor = oldQDoor.cloneNode(true);
+        const newQStatue = oldQStatue.cloneNode(true);
 
+        // Sostituisci i pulsanti
         oldAskBtn.parentNode.replaceChild(newAskBtn, oldAskBtn);
         oldChooseBtn.parentNode.replaceChild(newChooseBtn, oldChooseBtn);
+        oldQDoor.parentNode.replaceChild(newQDoor, oldQDoor);
+        oldQStatue.parentNode.replaceChild(newQStatue, oldQStatue);
 
         // Aggiorna i riferimenti
         this.elements.askBtn = newAskBtn;
         this.elements.chooseBtn = newChooseBtn;
+        this.elements.qDoor = newQDoor;
+        this.elements.qStatue = newQStatue;
 
-        // Aggiungi nuovi event listener
+        // Aggiungi nuovi event listener con debug
         this.elements.askBtn.addEventListener('click', (e) => {
+            console.log('🔥 CLICK su pulsante Chiedi!');
             e.preventDefault();
             e.stopPropagation();
             this.showQuestionOptions();
         });
 
         this.elements.chooseBtn.addEventListener('click', (e) => {
+            console.log('🔥 CLICK su pulsante Scegli!');
             e.preventDefault();
             e.stopPropagation();
             this.chooseMode();
@@ -161,21 +194,32 @@ class CastleGame {
 
         // Setup pulsanti domande
         this.elements.qDoor.addEventListener('click', (e) => {
+            console.log('🔥 CLICK su domanda porta!');
             e.preventDefault();
             e.stopPropagation();
             this.askAboutDoor();
         });
 
         this.elements.qStatue.addEventListener('click', (e) => {
+            console.log('🔥 CLICK su domanda statua!');
             e.preventDefault();
             e.stopPropagation();
             this.askAboutStatue();
         });
 
-        // Forza pointer events
+        // Forza pointer events e visibilità
         [this.elements.askBtn, this.elements.chooseBtn, this.elements.qDoor, this.elements.qStatue].forEach(btn => {
-            btn.style.pointerEvents = 'auto';
+            btn.style.cssText += `
+                pointer-events: auto !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                z-index: 125 !important;
+                position: relative !important;
+            `;
         });
+
+        console.log('✅ Buttons setup complete');
     }
 
     setupClickAreas() {
@@ -229,12 +273,31 @@ class CastleGame {
         this.elements.dialogueBox.style.visibility = 'hidden';
         this.elements.options.style.display = 'flex';
         this.currentState = 'gameplay';
+        console.log('🎮 Gameplay state activated - buttons should be clickable now');
     }
 
     showQuestionOptions() {
-        console.log('🗨️ Mostrando opzioni domande');
+        console.log('🗨️ Mostrando opzioni domande - START');
+
+        // Debug: verifica stato elementi
+        console.log('Options display before:', this.elements.options.style.display);
+        console.log('Question options display before:', this.elements.questionOptions.style.display);
+
+        // Nascondi options principali
         this.elements.options.style.display = 'none';
+        this.elements.options.style.visibility = 'hidden';
+
+        // Mostra question options
         this.elements.questionOptions.style.display = 'flex';
+        this.elements.questionOptions.style.visibility = 'visible';
+        this.elements.questionOptions.style.opacity = '1';
+
+        // Forza pointer events sui pulsanti delle domande
+        this.elements.qDoor.style.pointerEvents = 'auto';
+        this.elements.qStatue.style.pointerEvents = 'auto';
+
+        console.log('🗨️ Mostrando opzioni domande - END');
+        console.log('Question options display after:', this.elements.questionOptions.style.display);
     }
 
     askAboutDoor() {
@@ -345,6 +408,7 @@ class CastleGame {
     }
 
     resetToMainOptions() {
+        console.log('🔄 Resetting to main options');
         this.elements.dialogueBox.style.visibility = 'hidden';
         this.elements.questionOptions.style.display = 'none';
         this.elements.options.style.display = 'flex';
