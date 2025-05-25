@@ -1,11 +1,12 @@
 /**
  * ===== IL CASTELLO MALEDETTO - GAME.JS =====
  * Logica del gioco principale - Enigma delle Statue
- * VERSIONE CORRETTA CON FIX PER I PULSANTI
+ * VERSIONE CON DEBUG ESTESO
  */
 
 class CastleGame {
     constructor() {
+        console.log('🎮 Constructor CastleGame started');
         this.currentState = 'intro';
         this.dialogueIndex = 0;
         this.typeWriter = null;
@@ -19,10 +20,21 @@ class CastleGame {
         // DEBUG: Aggiungi listener globale per testare i click
         document.addEventListener('click', (e) => {
             console.log('🔍 Click globale su:', e.target.id, e.target.className, e.target);
+
+            // Debug specifico per i pulsanti
+            if (e.target.id === 'ask-btn') {
+                console.log('🚨 CLICK RILEVATO SU ASK-BTN');
+                console.log('Current state:', this.currentState);
+                console.log('Event prevented?', e.defaultPrevented);
+            }
         });
+
+        console.log('🎮 Constructor CastleGame completed');
     }
 
     initializeElements() {
+        console.log('🔧 Initializing elements...');
+
         // Elementi DOM principali
         this.elements = {
             background: document.getElementById('background'),
@@ -41,11 +53,22 @@ class CastleGame {
             qStatue: document.getElementById('q-statue')
         };
 
+        // Verifica che tutti gli elementi esistano
+        Object.keys(this.elements).forEach(key => {
+            if (!this.elements[key]) {
+                console.error(`❌ Element ${key} not found!`);
+            } else {
+                console.log(`✅ Element ${key} found`);
+            }
+        });
+
         // Inizializza TypeWriter
         this.typeWriter = new TypeWriter(this.elements.dialogueText);
 
         // Setup event listeners
         this.setupEventListeners();
+
+        console.log('✅ Elements initialized');
     }
 
     initializeGameData() {
@@ -115,111 +138,122 @@ class CastleGame {
     setupGameplayHandlers() {
         console.log('🔧 Setting up gameplay handlers...');
 
-        // Fix CSS per containers - RIMUOVI pointer-events: none
-        this.elements.options.style.cssText = `
-            position: fixed !important;
-            bottom: 5% !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            width: 90% !important;
-            max-width: 800px !important;
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: flex-end !important;
-            z-index: 120 !important;
-            pointer-events: auto !important;
-        `;
+        // Metodo alternativo: invece di usare CSS inline, forza direttamente
+        this.forceButtonStyles();
 
-        this.elements.questionOptions.style.cssText = `
-            position: fixed !important;
-            bottom: 5% !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            width: 90% !important;
-            max-width: 800px !important;
-            display: none !important;
-            justify-content: space-between !important;
-            align-items: flex-end !important;
-            z-index: 120 !important;
-            pointer-events: auto !important;
-        `;
-
-        // Rimuovi tutti gli event listener esistenti e riapplica
-        this.cleanAndSetupButtons();
+        // Setup immediato dei button handlers
+        this.setupButtonHandlers();
         this.setupClickAreas();
 
         console.log('✅ Gameplay handlers setup complete');
     }
 
-    cleanAndSetupButtons() {
-        console.log('🔧 Cleaning and setting up buttons...');
+    forceButtonStyles() {
+        console.log('🎨 Forcing button styles...');
 
-        // Clona i pulsanti per rimuovere tutti gli event listener
-        const oldAskBtn = this.elements.askBtn;
-        const oldChooseBtn = this.elements.chooseBtn;
-        const oldQDoor = this.elements.qDoor;
-        const oldQStatue = this.elements.qStatue;
+        // Force styles per containers
+        if (this.elements.options) {
+            this.elements.options.style.setProperty('pointer-events', 'auto', 'important');
+            this.elements.options.style.setProperty('z-index', '120', 'important');
+            this.elements.options.style.setProperty('position', 'fixed', 'important');
+        }
 
-        const newAskBtn = oldAskBtn.cloneNode(true);
-        const newChooseBtn = oldChooseBtn.cloneNode(true);
-        const newQDoor = oldQDoor.cloneNode(true);
-        const newQStatue = oldQStatue.cloneNode(true);
+        if (this.elements.questionOptions) {
+            this.elements.questionOptions.style.setProperty('pointer-events', 'auto', 'important');
+            this.elements.questionOptions.style.setProperty('z-index', '120', 'important');
+            this.elements.questionOptions.style.setProperty('position', 'fixed', 'important');
+        }
 
-        // Sostituisci i pulsanti
-        oldAskBtn.parentNode.replaceChild(newAskBtn, oldAskBtn);
-        oldChooseBtn.parentNode.replaceChild(newChooseBtn, oldChooseBtn);
-        oldQDoor.parentNode.replaceChild(newQDoor, oldQDoor);
-        oldQStatue.parentNode.replaceChild(newQStatue, oldQStatue);
-
-        // Aggiorna i riferimenti
-        this.elements.askBtn = newAskBtn;
-        this.elements.chooseBtn = newChooseBtn;
-        this.elements.qDoor = newQDoor;
-        this.elements.qStatue = newQStatue;
-
-        // Aggiungi nuovi event listener con debug
-        this.elements.askBtn.addEventListener('click', (e) => {
-            console.log('🔥 CLICK su pulsante Chiedi!');
-            e.preventDefault();
-            e.stopPropagation();
-            this.showQuestionOptions();
+        // Force styles per buttons
+        [this.elements.askBtn, this.elements.chooseBtn, this.elements.qDoor, this.elements.qStatue].forEach((btn, index) => {
+            if (btn) {
+                btn.style.setProperty('pointer-events', 'auto', 'important');
+                btn.style.setProperty('z-index', '125', 'important');
+                btn.style.setProperty('position', 'relative', 'important');
+                btn.style.setProperty('display', 'block', 'important');
+                console.log(`✅ Button ${index} styles forced`);
+            }
         });
+    }
 
-        this.elements.chooseBtn.addEventListener('click', (e) => {
-            console.log('🔥 CLICK su pulsante Scegli!');
-            e.preventDefault();
-            e.stopPropagation();
-            this.chooseMode();
-        });
+    setupButtonHandlers() {
+        console.log('🔧 Setting up button handlers...');
+
+        // Rimuovi tutti gli event listener esistenti
+        if (this.elements.askBtn) {
+            // Clona per rimuovere listeners
+            const newAskBtn = this.elements.askBtn.cloneNode(true);
+            this.elements.askBtn.parentNode.replaceChild(newAskBtn, this.elements.askBtn);
+            this.elements.askBtn = newAskBtn;
+
+            // Test con diversi tipi di event listener
+            this.elements.askBtn.onclick = (e) => {
+                console.log('🔥 ONCLICK su pulsante Chiedi!');
+                e.preventDefault();
+                e.stopPropagation();
+                this.showQuestionOptions();
+            };
+
+            this.elements.askBtn.addEventListener('click', (e) => {
+                console.log('🔥 ADDEVENTLISTENER CLICK su pulsante Chiedi!');
+                e.preventDefault();
+                e.stopPropagation();
+                this.showQuestionOptions();
+            }, true); // UseCapture = true
+
+            console.log('✅ Ask button handler set');
+        }
+
+        if (this.elements.chooseBtn) {
+            const newChooseBtn = this.elements.chooseBtn.cloneNode(true);
+            this.elements.chooseBtn.parentNode.replaceChild(newChooseBtn, this.elements.chooseBtn);
+            this.elements.chooseBtn = newChooseBtn;
+
+            this.elements.chooseBtn.onclick = (e) => {
+                console.log('🔥 CLICK su pulsante Scegli!');
+                e.preventDefault();
+                e.stopPropagation();
+                this.chooseMode();
+            };
+
+            console.log('✅ Choose button handler set');
+        }
 
         // Setup pulsanti domande
-        this.elements.qDoor.addEventListener('click', (e) => {
-            console.log('🔥 CLICK su domanda porta!');
-            e.preventDefault();
-            e.stopPropagation();
-            this.askAboutDoor();
-        });
+        if (this.elements.qDoor) {
+            const newQDoor = this.elements.qDoor.cloneNode(true);
+            this.elements.qDoor.parentNode.replaceChild(newQDoor, this.elements.qDoor);
+            this.elements.qDoor = newQDoor;
 
-        this.elements.qStatue.addEventListener('click', (e) => {
-            console.log('🔥 CLICK su domanda statua!');
-            e.preventDefault();
-            e.stopPropagation();
-            this.askAboutStatue();
-        });
+            this.elements.qDoor.onclick = (e) => {
+                console.log('🔥 CLICK su domanda porta!');
+                e.preventDefault();
+                e.stopPropagation();
+                this.askAboutDoor();
+            };
+        }
 
-        // Forza pointer events e visibilità
-        [this.elements.askBtn, this.elements.chooseBtn, this.elements.qDoor, this.elements.qStatue].forEach(btn => {
-            btn.style.cssText += `
-                pointer-events: auto !important;
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                z-index: 125 !important;
-                position: relative !important;
-            `;
-        });
+        if (this.elements.qStatue) {
+            const newQStatue = this.elements.qStatue.cloneNode(true);
+            this.elements.qStatue.parentNode.replaceChild(newQStatue, this.elements.qStatue);
+            this.elements.qStatue = newQStatue;
 
-        console.log('✅ Buttons setup complete');
+            this.elements.qStatue.onclick = (e) => {
+                console.log('🔥 CLICK su domanda statua!');
+                e.preventDefault();
+                e.stopPropagation();
+                this.askAboutStatue();
+            };
+        }
+
+        // Test immediato per verificare che i pulsanti siano cliccabili
+        setTimeout(() => {
+            console.log('🧪 Testing button clickability...');
+            if (this.elements.askBtn) {
+                console.log('Ask button onclick:', !!this.elements.askBtn.onclick);
+                console.log('Ask button style pointer-events:', this.elements.askBtn.style.pointerEvents);
+            }
+        }, 1000);
     }
 
     setupClickAreas() {
@@ -270,34 +304,53 @@ class CastleGame {
     }
 
     endIntroSequence() {
+        console.log('🎬 Ending intro sequence...');
         this.elements.dialogueBox.style.visibility = 'hidden';
         this.elements.options.style.display = 'flex';
         this.currentState = 'gameplay';
         console.log('🎮 Gameplay state activated - buttons should be clickable now');
+
+        // Test immediato dei pulsanti dopo l'intro
+        setTimeout(() => {
+            console.log('🧪 Post-intro button test...');
+            if (this.elements.askBtn) {
+                console.log('Ask button visible:', this.elements.askBtn.style.display !== 'none');
+                console.log('Ask button parent visible:', this.elements.options.style.display);
+            }
+        }, 500);
     }
 
     showQuestionOptions() {
-        console.log('🗨️ Mostrando opzioni domande - START');
+        console.log('🗨️ showQuestionOptions() CHIAMATO!');
 
-        // Debug: verifica stato elementi
-        console.log('Options display before:', this.elements.options.style.display);
-        console.log('Question options display before:', this.elements.questionOptions.style.display);
+        try {
+            // Debug: verifica stato elementi
+            console.log('Options display before:', this.elements.options.style.display);
+            console.log('Question options display before:', this.elements.questionOptions.style.display);
 
-        // Nascondi options principali
-        this.elements.options.style.display = 'none';
-        this.elements.options.style.visibility = 'hidden';
+            // Nascondi options principali
+            this.elements.options.style.display = 'none';
+            this.elements.options.style.visibility = 'hidden';
 
-        // Mostra question options
-        this.elements.questionOptions.style.display = 'flex';
-        this.elements.questionOptions.style.visibility = 'visible';
-        this.elements.questionOptions.style.opacity = '1';
+            // Mostra question options
+            this.elements.questionOptions.style.display = 'flex';
+            this.elements.questionOptions.style.visibility = 'visible';
+            this.elements.questionOptions.style.opacity = '1';
 
-        // Forza pointer events sui pulsanti delle domande
-        this.elements.qDoor.style.pointerEvents = 'auto';
-        this.elements.qStatue.style.pointerEvents = 'auto';
+            // Forza pointer events sui pulsanti delle domande
+            if (this.elements.qDoor) {
+                this.elements.qDoor.style.pointerEvents = 'auto';
+            }
+            if (this.elements.qStatue) {
+                this.elements.qStatue.style.pointerEvents = 'auto';
+            }
 
-        console.log('🗨️ Mostrando opzioni domande - END');
-        console.log('Question options display after:', this.elements.questionOptions.style.display);
+            console.log('🗨️ Question options display after:', this.elements.questionOptions.style.display);
+            console.log('✅ showQuestionOptions() completato con successo');
+
+        } catch (error) {
+            console.error('❌ Errore in showQuestionOptions():', error);
+        }
     }
 
     askAboutDoor() {
@@ -548,6 +601,16 @@ class CastleGame {
     }
 }
 
+// FUNZIONE DI TEST MANUALE
+function testAskButton() {
+    console.log('🧪 Test manuale del pulsante Chiedi');
+    if (window.castleGame && window.castleGame.showQuestionOptions) {
+        window.castleGame.showQuestionOptions();
+    } else {
+        console.error('❌ CastleGame non trovato o metodo non disponibile');
+    }
+}
+
 // Funzioni globali per la navigazione
 function restartGame() {
     window.location.reload();
@@ -559,9 +622,14 @@ function goHome() {
 
 // Inizializzazione robusta del gioco
 function initializeCastleGame() {
+    console.log('🚀 Inizializzazione CastleGame...');
     if (!window.castleGame) {
         window.castleGame = new CastleGame();
         console.log('🎮 CastleGame inizializzato!');
+
+        // Rendi disponibile la funzione di test
+        window.testAskButton = testAskButton;
+        console.log('🧪 Funzione di test disponibile: testAskButton()');
     }
 }
 
