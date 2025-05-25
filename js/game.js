@@ -353,7 +353,7 @@ class CastleGame {
             <button class="btn" onclick="restartGame()">
                 🔄 Gioca Ancora
             </button>
-            <button class="btn" onclick="Navigation.goHome()">
+            <button class="btn" onclick="window.location.href='../index.html'">
                 🏠 Menu Principale
             </button>
         `;
@@ -381,7 +381,7 @@ class CastleGame {
             <button class="btn" onclick="restartGame()">
                 🔄 Riprova
             </button>
-            <button class="btn" onclick="Navigation.goHome()">
+            <button class="btn" onclick="window.location.href='../index.html'">
                 🏠 Menu Principale
             </button>
         `;
@@ -408,7 +408,7 @@ function restartGame() {
 }
 
 function goHome() {
-    Navigation.goHome();
+    window.location.href = '../index.html';
 }
 
 // Inizializza il gioco quando la pagina è caricata

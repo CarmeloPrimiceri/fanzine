@@ -270,13 +270,13 @@ class VictoryScreen {
 
         // Transizione al gioco
         this.navigateWithTransition(() => {
-            Navigation.goToPage('intro');
+            window.location.href = 'intro.html';
         });
     }
 
     goToMenu() {
         this.navigateWithTransition(() => {
-            Navigation.goHome();
+            window.location.href = '../index.html';
         });
     }
 
