@@ -58,7 +58,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px solid blue !important;
 }
 
 #dialogue-box {
@@ -91,10 +90,8 @@
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
     overflow: hidden;
     z-index: 110;
-    /*border: none;
-    background: transparent;*/
-    border: 3px solid red !important;
-    background: rgba(255, 255, 0, 0.2) !important; /* giallo trasparente */
+    border: none;
+    background: transparent;
     padding: 10px;
     margin: 0;
     box-sizing: border-box;
@@ -491,4 +488,15 @@
     display: flex !important;
 }
 
+/* DEBUG - AGGIUNGI ALLA FINE DEL FILE */
+#dialogue-wrapper {
+    border: 5px solid blue !important;
+    box-shadow: inset 0 0 0 5px blue !important;
+}
+
+#dialogue-text {
+    border: 5px solid red !important;
+    box-shadow: inset 0 0 0 5px red !important;
+    background: rgba(255, 255, 0, 0.3) !important;
+}
 /* ===== FINE CSS REFACTORED ===== */
