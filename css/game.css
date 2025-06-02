@@ -340,11 +340,11 @@
     }
 
     #dialogue-text {
-        font-size: clamp(13px, 2.2vw, 18px);
-        top: 27%;
-        bottom: 27%;
-        left: 22%;
-        right: 22%;
+        font-size: clamp(14px, 2.2vw, 18px);
+        top: 12.5%;      /* 75% di altezza */
+        bottom: 12.5%;
+        left: 12.5%;     /* 75% di larghezza */
+        right: 12.5%;
         padding: 8px;
     }
 
@@ -390,10 +390,10 @@
 
     #dialogue-text {
         font-size: clamp(12px, 3vw, 16px);
-        top: 30%;
-        bottom: 30%;
-        left: 25%;
-        right: 25%;
+        top: 12.5%;      /* Mantieni sempre il 75% */
+        bottom: 12.5%;
+        left: 12.5%;
+        right: 12.5%;
         padding: 6px;
     }
 
