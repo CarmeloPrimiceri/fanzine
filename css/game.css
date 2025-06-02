@@ -72,10 +72,10 @@
 
 #dialogue-text {
     position: absolute;
-    top: 12.5%;      /* (100% - 75%) / 2 = 12.5% */
-    left: 12.5%;     /* (100% - 75%) / 2 = 12.5% */
-    right: 12.5%;    /* (100% - 75%) / 2 = 12.5% */
-    bottom: 12.5%;   /* (100% - 75%) / 2 = 12.5% */
+    top: 25%;
+    bottom: 25%;
+    left: 20%;
+    right: 20%;
     color: #2c1810;
     font-family: 'Georgia', 'Times New Roman', serif;
     font-size: clamp(14px, 2vw, 20px);
@@ -341,11 +341,11 @@
     }
 
     #dialogue-text {
-        font-size: clamp(14px, 2.2vw, 18px);
-        top: 12.5%;      /* 75% di altezza */
-        bottom: 12.5%;
-        left: 12.5%;     /* 75% di larghezza */
-        right: 12.5%;
+        font-size: clamp(13px, 2.2vw, 18px);
+        top: 25%;
+        bottom: 25%;
+        left: 20%;
+        right: 20%;
         padding: 8px;
     }
 
@@ -391,10 +391,10 @@
 
     #dialogue-text {
         font-size: clamp(12px, 3vw, 16px);
-        top: 12.5%;      /* Mantieni sempre il 75% */
-        bottom: 12.5%;
-        left: 12.5%;
-        right: 12.5%;
+        top: 28%;
+        bottom: 28%;
+        left: 22%;
+        right: 22%;
         padding: 6px;
     }
 
@@ -488,7 +488,7 @@
     display: flex !important;
 }
 
-/* DEBUG - AGGIUNGI ALLA FINE DEL FILE */
+/* DEBUG - AGGIUNGI ALLA FINE DEL FILE
 #dialogue-wrapper {
     border: 5px solid blue !important;
     box-shadow: inset 0 0 0 5px blue !important;
