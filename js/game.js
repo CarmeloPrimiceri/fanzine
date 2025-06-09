@@ -1,7 +1,7 @@
 /**
  * ===== IL CASTELLO MALEDETTO - GAME.JS REFACTORED =====
  * Logica del gioco principale - Enigma delle Statue
- * VERSIONE OTTIMIZZATA E PULITA
+ * VERSIONE OTTIMIZZATA E PULITA CON MUSICA DI SOTTOFONDO
  */
 
 class CastleGame {
@@ -110,6 +110,22 @@ class CastleGame {
                 ErrorHandler.handleAudioError(element, id);
             }
         });
+
+        // Applica bilanciamento volumi
+        this.adjustAudioLevels();
+    }
+
+    adjustAudioLevels() {
+        // Imposta volumi relativi per bilanciare i suoni
+        const bgMusic = document.getElementById('bgmusic');
+        const torch = document.getElementById('torch');
+        const footsteps = document.getElementById('footsteps');
+        const wind = document.getElementById('wind');
+
+        if (bgMusic) bgMusic.volume = 0.3;      // Musica più bassa
+        if (torch) torch.volume = 0.4;         // Fiamma moderata
+        if (footsteps) footsteps.volume = 0.6; // Passi udibili
+        if (wind) wind.volume = 0.5;           // Vento moderato
     }
 
     setupIntroListeners() {
@@ -191,6 +207,9 @@ class CastleGame {
         // Avvia effetti sonori
         window.audioManager.play('footsteps');
         window.audioManager.play('torch', true);
+
+        // Avvia la musica di sottofondo
+        window.audioManager.play('bgmusic', true);
     }
 
     showIntroDialogue(index) {
@@ -236,6 +255,12 @@ class CastleGame {
         // Assicura che i pulsanti delle domande siano nascosti
         this.elements.questionOptions.style.display = 'none';
         this.elements.questionOptions.style.visibility = 'hidden';
+
+        // Assicura che la musica stia suonando
+        const bgMusic = document.getElementById('bgmusic');
+        if (bgMusic && bgMusic.paused) {
+            window.audioManager.play('bgmusic', true);
+        }
 
         // Cambia stato e setup listeners
         this.currentState = 'gameplay';
@@ -390,7 +415,12 @@ class CastleGame {
 
         // Stop audio
         window.audioManager.pause('torch');
-        window.audioManager.play('wind');
+        window.audioManager.pause('bgmusic');
+
+        // Avvia il vento dopo un breve delay
+        setTimeout(() => {
+            window.audioManager.play('wind');
+        }, 500);
 
         // Fade to black
         this.elements.fadeOverlay.style.opacity = '1';
@@ -519,6 +549,16 @@ class CastleGame {
         `;
 
         document.getElementById('scene').appendChild(gameOverDiv);
+    }
+
+    // Metodo opzionale per controllare la musica
+    toggleBackgroundMusic() {
+        const bgMusic = document.getElementById('bgmusic');
+        if (bgMusic && !bgMusic.paused) {
+            window.audioManager.pause('bgmusic');
+        } else {
+            window.audioManager.play('bgmusic', true);
+        }
     }
 }
 
