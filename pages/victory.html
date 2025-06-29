@@ -5,7 +5,470 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Il Castello Maledetto - Vittoria!</title>
     <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/victory.css">
+    <style>
+        /* ===== VICTORY.CSS INLINE - Stili corretti per la schermata di vittoria ===== */
+
+        #victory-scene {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* Background ottimizzato per mobile */
+        .treasure-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        #treasure-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: brightness(0.4) blur(1px);
+        }
+
+        /* Overlay principale con background scuro per leggibilità */
+        .victory-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 0, 0, 0.85) 0%,
+                rgba(0, 0, 0, 0.7) 50%,
+                rgba(0, 0, 0, 0.9) 100%
+            );
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1;
+            padding: 2rem 1rem;
+            overflow-y: auto;
+            min-height: 100vh;
+        }
+
+        /* Particelle d'oro animate */
+        .gold-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 215, 0, 0.4), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255, 215, 0, 0.5), transparent);
+            background-repeat: repeat;
+            background-size: 150px 100px;
+            animation: sparkle 15s linear infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes sparkle {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100px); }
+        }
+
+        /* Contenuto principale */
+        .victory-content {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+        }
+
+        /* Titolo vittoria */
+        .victory-title {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            margin-bottom: 1rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffd700, #ffed4a, #ffd700);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: goldShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes goldShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Messaggio di vittoria */
+        .victory-message {
+            margin-bottom: 1.5rem;
+        }
+
+        .congratulations {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .story-text {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: #e0e0e0;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            line-height: 1.4;
+            margin-bottom: 1rem;
+        }
+
+        /* Statistiche partita */
+        .game-stats {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .game-stats h3 {
+            color: #ffd700;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            margin-bottom: 0.8rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .stat-value {
+            display: block;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .stat-label {
+            display: block;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: #ccc;
+            margin-top: 0.3rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Azioni vittoria */
+        .victory-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+
+        .victory-btn {
+            padding: 0.8rem 1.5rem;
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .victory-btn.primary {
+            background: linear-gradient(135deg, #ffd700, #ffb347);
+            color: #000;
+            border-color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .victory-btn.primary:hover {
+            background: linear-gradient(135deg, #ffed4a, #ffd700);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .victory-btn.secondary {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .victory-btn.secondary:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+            border-color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Sezione bonus */
+        .bonus-section {
+            margin-top: 1rem;
+        }
+
+        .bonus-btn {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 0.6rem 1.2rem;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .bonus-btn:hover {
+            background: linear-gradient(135deg, #8e44ad, #7d3c98);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+        }
+
+        /* Modal enigma bonus */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+            padding: 1rem;
+        }
+
+        .modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            color: #fff;
+            border: 2px solid #9b59b6;
+            border-radius: 15px;
+            padding: 1.5rem;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+        }
+
+        .bonus-content h2 {
+            color: #9b59b6;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .bonus-question {
+            font-size: clamp(1rem, 2.2vw, 1.2rem);
+            line-height: 1.5;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #e0e0e0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .bonus-answer-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        #bonus-answer {
+            padding: 0.8rem;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            border: 2px solid #9b59b6;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        #bonus-answer::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #bonus-answer:focus {
+            outline: none;
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(155, 89, 182, 0.5);
+        }
+
+        .bonus-answer-section .btn {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 0.8rem 1.5rem;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .bonus-answer-section .btn:hover {
+            background: linear-gradient(135deg, #8e44ad, #7d3c98);
+            border-color: #fff;
+        }
+
+        .bonus-result {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            line-height: 1.4;
+        }
+
+        .bonus-result.correct {
+            background: rgba(46, 204, 113, 0.2);
+            border: 2px solid #2ecc71;
+            color: #2ecc71;
+        }
+
+        .bonus-result.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 2px solid #e74c3c;
+            color: #e74c3c;
+        }
+
+        .bonus-result h3 {
+            margin-bottom: 0.5rem;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #9b59b6;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #9b59b6;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .victory-overlay {
+                padding: 1rem 0.5rem;
+            }
+            
+            .victory-content {
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .victory-actions {
+                gap: 0.6rem;
+            }
+            
+            .modal-content {
+                padding: 1rem;
+                margin: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .victory-overlay {
+                padding: 0.5rem;
+            }
+            
+            .victory-content {
+                padding: 0.8rem;
+                border-radius: 10px;
+            }
+            
+            .victory-title {
+                margin-bottom: 0.8rem;
+            }
+            
+            .game-stats {
+                padding: 0.8rem;
+                margin-bottom: 1rem;
+            }
+            
+            .stat-item {
+                padding: 0.6rem;
+            }
+            
+            .victory-actions {
+                gap: 0.5rem;
+            }
+            
+            .victory-btn {
+                padding: 0.7rem 1.2rem;
+            }
+        }
+
+        /* Accessibilità */
+        @media (prefers-reduced-motion: reduce) {
+            .gold-particles,
+            .victory-title {
+                animation: none;
+            }
+        }
+
+        /* Utility classes */
+        .hidden {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        .visible {
+            display: block !important;
+            visibility: visible !important;
+        }
+    </style>
 </head>
 <body>
 <div id="victory-scene">
@@ -106,6 +569,342 @@
 </div>
 
 <script src="../js/main.js"></script>
-<script src="../js/victory.js"></script>
+<script>
+/**
+ * Victory.js integrato per evitare problemi di caricamento
+ */
+
+class VictoryScreen {
+    constructor() {
+        this.gameStartTime = this.getGameStartTime();
+        this.completionTime = this.calculateCompletionTime();
+        this.questionsAsked = this.getQuestionsAsked();
+        this.bonusRiddleAnswer = 'cuore';
+
+        this.elements = {
+            completionTimeEl: document.getElementById('completion-time'),
+            questionsAskedEl: document.getElementById('questions-asked'),
+            bonusModal: document.getElementById('bonus-modal'),
+            bonusAnswer: document.getElementById('bonus-answer'),
+            bonusResult: document.getElementById('bonus-result')
+        };
+
+        this.initializeAudio();
+        this.displayStats();
+        this.setupEventListeners();
+        this.startVictorySequence();
+    }
+
+    initializeAudio() {
+        const victoryMusic = document.getElementById('victory-music');
+        const treasureSound = document.getElementById('treasure-sound');
+
+        if (victoryMusic && window.audioManager) {
+            window.audioManager.registerAudio('victory-music', victoryMusic);
+            window.audioManager.setVolume('victory-music', 0.6);
+        }
+
+        if (treasureSound && window.audioManager) {
+            window.audioManager.registerAudio('treasure-sound', treasureSound);
+            window.audioManager.setVolume('treasure-sound', 0.8);
+        }
+    }
+
+    setupEventListeners() {
+        if (this.elements.bonusAnswer) {
+            this.elements.bonusAnswer.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.checkBonusAnswer();
+                }
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.hideBonusRiddle();
+            }
+        });
+
+        if (this.elements.bonusModal) {
+            this.elements.bonusModal.addEventListener('click', (e) => {
+                if (e.target === this.elements.bonusModal) {
+                    this.hideBonusRiddle();
+                }
+            });
+        }
+    }
+
+    getGameStartTime() {
+        const startTime = localStorage.getItem('gameStartTime') ||
+            sessionStorage.getItem('gameStartTime') ||
+            Date.now();
+        return parseInt(startTime);
+    }
+
+    calculateCompletionTime() {
+        const endTime = Date.now();
+        const totalTime = endTime - this.gameStartTime;
+
+        const minutes = Math.floor(totalTime / 60000);
+        const seconds = Math.floor((totalTime % 60000) / 1000);
+
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    getQuestionsAsked() {
+        return parseInt(localStorage.getItem('questionsAsked') || '0');
+    }
+
+    displayStats() {
+        if (this.elements.completionTimeEl) {
+            this.elements.completionTimeEl.textContent = this.completionTime;
+        }
+
+        if (this.elements.questionsAskedEl) {
+            this.elements.questionsAskedEl.textContent = this.questionsAsked;
+        }
+    }
+
+    startVictorySequence() {
+        setTimeout(() => {
+            if (window.audioManager) {
+                window.audioManager.play('victory-music', true);
+            }
+        }, 500);
+
+        setTimeout(() => {
+            if (window.audioManager) {
+                window.audioManager.play('treasure-sound');
+            }
+        }, 1000);
+
+        this.saveVictoryRecord();
+    }
+
+    saveVictoryRecord() {
+        const victories = JSON.parse(localStorage.getItem('castleVictories') || '[]');
+
+        const newVictory = {
+            date: new Date().toISOString(),
+            completionTime: this.completionTime,
+            questionsAsked: this.questionsAsked,
+            timestamp: Date.now()
+        };
+
+        victories.push(newVictory);
+
+        if (victories.length > 10) {
+            victories.splice(0, victories.length - 10);
+        }
+
+        localStorage.setItem('castleVictories', JSON.stringify(victories));
+    }
+
+    showBonusRiddle() {
+        if (this.elements.bonusModal) {
+            this.elements.bonusModal.classList.remove('hidden');
+
+            setTimeout(() => {
+                if (this.elements.bonusAnswer) {
+                    this.elements.bonusAnswer.focus();
+                }
+            }, 100);
+        }
+    }
+
+    hideBonusRiddle() {
+        if (this.elements.bonusModal) {
+            this.elements.bonusModal.classList.add('hidden');
+
+            if (this.elements.bonusAnswer) {
+                this.elements.bonusAnswer.value = '';
+            }
+            if (this.elements.bonusResult) {
+                this.elements.bonusResult.classList.add('hidden');
+                this.elements.bonusResult.className = 'bonus-result hidden';
+            }
+        }
+    }
+
+    checkBonusAnswer() {
+        const userAnswer = this.elements.bonusAnswer?.value.toLowerCase().trim();
+
+        if (!userAnswer) return;
+
+        const isCorrect = userAnswer === this.bonusRiddleAnswer ||
+            userAnswer === 'il cuore' ||
+            userAnswer === 'un cuore';
+
+        if (this.elements.bonusResult) {
+            this.elements.bonusResult.classList.remove('hidden');
+
+            if (isCorrect) {
+                this.elements.bonusResult.className = 'bonus-result correct';
+                this.elements.bonusResult.innerHTML = `
+                    <h3>🎉 Corretto!</h3>
+                    <p>La risposta è proprio il <strong>cuore</strong>!</p>
+                    <p>Il cuore si rafforza quando è spezzato dalle difficoltà, 
+                       diventa più utile quando è rovinato dall'esperienza, 
+                       e più prezioso quando è dimenticato da chi non sa apprezzarlo.</p>
+                    <p><em>Hai dimostrato di essere un vero maestro degli enigmi!</em></p>
+                `;
+
+                localStorage.setItem('bonusRiddleCompleted', 'true');
+
+                if (window.audioManager) {
+                    window.audioManager.play('treasure-sound');
+                }
+
+            } else {
+                this.elements.bonusResult.className = 'bonus-result incorrect';
+                this.elements.bonusResult.innerHTML = `
+                    <h3>🤔 Non proprio...</h3>
+                    <p>Rifletti ancora: cosa diventa più forte quando è spezzato?</p>
+                    <p><em>Suggerimento: è qualcosa che tutti hanno dentro di sé.</em></p>
+                `;
+            }
+        }
+    }
+
+    shareVictory() {
+        const shareText = `🏰 Ho completato "Il Castello Maledetto"!\n⏱️ Tempo: ${this.completionTime}\n❓ Domande: ${this.questionsAsked}\n🏆 Vittoria alla prima porta!`;
+
+        if (navigator.share) {
+            navigator.share({
+                title: 'Il Castello Maledetto - Vittoria!',
+                text: shareText,
+                url: window.location.origin
+            }).catch(err => {
+                this.fallbackShare(shareText);
+            });
+        } else {
+            this.fallbackShare(shareText);
+        }
+    }
+
+    fallbackShare(text) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(() => {
+                this.showShareMessage('Testo copiato negli appunti!');
+            }).catch(() => {
+                this.showShareMessage('Impossibile copiare automaticamente');
+            });
+        } else {
+            alert(`Condividi la tua vittoria:\n\n${text}`);
+        }
+    }
+
+    showShareMessage(message) {
+        const messageEl = document.createElement('div');
+        messageEl.textContent = message;
+        messageEl.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 10000;
+            transition: opacity 0.3s ease;
+        `;
+
+        document.body.appendChild(messageEl);
+
+        setTimeout(() => {
+            messageEl.style.opacity = '0';
+            setTimeout(() => {
+                document.body.removeChild(messageEl);
+            }, 300);
+        }, 2000);
+    }
+
+    playAgain() {
+        localStorage.removeItem('gameStartTime');
+        localStorage.removeItem('questionsAsked');
+        sessionStorage.clear();
+
+        this.navigateWithTransition(() => {
+            window.location.href = 'intro.html';
+        });
+    }
+
+    goToMenu() {
+        this.navigateWithTransition(() => {
+            window.location.href = '../index.html';
+        });
+    }
+
+    navigateWithTransition(callback) {
+        const overlay = document.createElement('div');
+        overlay.className = 'fade-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            opacity: 0;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        `;
+
+        document.body.appendChild(overlay);
+
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+        });
+
+        setTimeout(() => {
+            callback();
+        }, 500);
+    }
+}
+
+// Funzioni globali
+function showBonusRiddle() {
+    if (window.victoryScreen) {
+        window.victoryScreen.showBonusRiddle();
+    }
+}
+
+function hideBonusRiddle() {
+    if (window.victoryScreen) {
+        window.victoryScreen.hideBonusRiddle();
+    }
+}
+
+function checkBonusAnswer() {
+    if (window.victoryScreen) {
+        window.victoryScreen.checkBonusAnswer();
+    }
+}
+
+function shareVictory() {
+    if (window.victoryScreen) {
+        window.victoryScreen.shareVictory();
+    }
+}
+
+function playAgain() {
+    if (window.victoryScreen) {
+        window.victoryScreen.playAgain();
+    }
+}
+
+function goToMenu() {
+    if (window.victoryScreen) {
+        window.victoryScreen.goToMenu();
+    }
+}
+
+// Inizializza la schermata di vittoria
+document.addEventListener('DOMContentLoaded', () => {
+    window.victoryScreen = new VictoryScreen();
+    console.log('🏆 Schermata di vittoria inizializzata');
+});
+</script>
 </body>
 </html>
