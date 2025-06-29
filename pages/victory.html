@@ -470,7 +470,8 @@
     <div class="treasure-background">
         <img id="treasure-bg"
              src="../assets/images/backgrounds/Arrivo_Del_Cavaliere.png"
-             alt="Cavaliere che arriva al castello">
+             alt="Cavaliere che arriva al castello"
+             onerror="this.src='../assets/images/backgrounds/corridoio_.png'; console.log('Fallback immagine usato');">
     </div>
 
     <div class="victory-overlay">
@@ -743,6 +744,14 @@ class VictoryScreen {
         }
     }
 
+    continueToFanzine() {
+        // Per ora riporta al menu principale
+        // In futuro si potrebbe collegare alla fanzine vera
+        this.navigateWithTransition(() => {
+            window.location.href = '../index.html';
+        });
+    }
+
     shareVictory() {
         const shareText = `🏰 Ho completato "Il Castello Maledetto"!\n⏱️ Tempo: ${this.completionTime}\n❓ Domande: ${this.questionsAsked}\n🏆 Vittoria alla prima porta!`;
 
@@ -855,13 +864,13 @@ function hideBonusRiddle() {
 
 function checkBonusAnswer() {
     if (window.victoryScreen) {
-        window.victoryScreen.playAgain();
+        window.victoryScreen.checkBonusAnswer();
     }
 }
 
 function continueToFanzine() {
     if (window.victoryScreen) {
-        window.victoryScreen.continueToFanzine();
+        window.victoryScreen.playAgain();
     }
 }
 
