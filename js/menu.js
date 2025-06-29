@@ -101,7 +101,7 @@ class MainMenu {
 
     startAR() {
         this.navigateWithTransition(() => {
-            window.location.href = './ar-prototype/ar-experience.html';
+            window.location.href = '../progetto-ar-qr/index.html';
         });
     }
 
@@ -192,7 +192,7 @@ function startAR() {
     if (window.mainMenu) {
         window.mainMenu.startAR();
     } else {
-        window.location.href = './ar-prototype/ar-experience.html';
+        window.location.href = '../progetto-ar-qr/index.html';
     }
 }
 
