@@ -313,7 +313,7 @@ class CastleGame {
     }
 
     showDialogueAndPrompt(text) {
-        this.elements.speakerImg.src = '';
+        this.elements.speakerImg.src = '../assets/images/characters/testa_diavolo.png';
         this.elements.dialogueBox.style.visibility = 'visible';
 
         this.typeWriter.type(text, () => {
@@ -398,7 +398,7 @@ class CastleGame {
 
         // Pulisce l'interfaccia
         this.elements.dialogueBox.style.visibility = 'hidden';
-        this.elements.speakerImg.src = '';
+        this.elements.speakerImg.src = '../assets/images/characters/testa_diavolo.png';
         this.hideAllOptions();
 
         // Mostra opzioni principali
